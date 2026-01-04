@@ -59,30 +59,32 @@ where
                     (self.header.unwrap())(ui);
                 });
 
-                ui.add_space(ui.available_width() - 130.0);
+                // Align the action buttons to the right so we don't rely on calculating
+                // a spacer from available width (which caused the window to slowly grow).
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    if ui.button("Clear").on_hover_text("Clear Events").clicked() {
+                        (self.on_clear.unwrap())();
+                    }
 
-                if ui
-                    .button("To Bottom")
-                    .on_hover_text("Scroll to Bottom")
-                    .clicked()
-                {
-                    ui.scroll_to_rect(
-                        egui::Rect {
-                            min: egui::Pos2 { x: 0.0, y: 0.0 },
-                            max: egui::Pos2 {
-                                x: f32::MAX,
-                                y: f32::MAX,
+                    ui.separator();
+
+                    if ui
+                        .button("To Bottom")
+                        .on_hover_text("Scroll to Bottom")
+                        .clicked()
+                    {
+                        ui.scroll_to_rect(
+                            egui::Rect {
+                                min: egui::Pos2 { x: 0.0, y: 0.0 },
+                                max: egui::Pos2 {
+                                    x: f32::MAX,
+                                    y: f32::MAX,
+                                },
                             },
-                        },
-                        Some(egui::Align::Max),
-                    );
-                }
-
-                ui.separator();
-
-                if ui.button("Clear").on_hover_text("Clear Events").clicked() {
-                    (self.on_clear.unwrap())();
-                }
+                            Some(egui::Align::Max),
+                        );
+                    }
+                });
             });
 
             ui.separator();

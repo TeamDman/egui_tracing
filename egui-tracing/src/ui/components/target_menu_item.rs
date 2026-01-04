@@ -37,10 +37,13 @@ where
         ui.horizontal(|ui| {
             ui.label(pattern.truncate_graphemes(18))
                 .on_hover_text(pattern);
-            ui.add_space(ui.available_width() - 43.0);
-            if ui.button("Delete").clicked() {
-                self.on_clicked.unwrap()();
-            }
+
+            // Right-align the delete button instead of using a calculated spacer.
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                if ui.button("Delete").clicked() {
+                    self.on_clicked.unwrap()();
+                }
+            });
         });
     }
 }
